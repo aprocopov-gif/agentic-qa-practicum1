@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Playwright constitution
 
-Non-negotiables for every task. Details and examples: playwright-conventions.mdc (tests) and qa-orchestrator.mdc (ticket/CI workflow) — both added later.
+Non-negotiables for every task. Details and examples: `playwright-conventions.mdc` (tests) and `qa-orchestrator.mdc` (ticket/CI workflow) — both added later.
 
 ## MUST
 
