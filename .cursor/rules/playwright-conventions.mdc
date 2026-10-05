@@ -12,12 +12,13 @@ Examples use illustrative UI names only; confirm real BuddyTime copy in P7 again
 
 ## 1. Locators
 
-Prefer locators that match how users and assistive tech perceive the UI: role and accessible name first; CSS/XPath only when nothing user-facing fits and expect review.
+Prefer locators that match how users and assistive tech perceive the UI: role and accessible name first; CSS/XPath only when nothing user-facing fits and expect review. When you need the visible match only, chain `locator.visible()` (Playwright 1.63)—not the CSS `:visible` pseudo-class.
 
 ✅ **Good**
 
 ```typescript
 await page.getByRole('button', { name: 'Save draft' }).click();
+await page.getByRole('button', { name: 'Save draft' }).visible().click();
 await page.getByLabel('Event title').fill('Tuesday playdate');
 await page.getByText('Invite sent').waitFor();
 ```
@@ -26,10 +27,11 @@ await page.getByText('Invite sent').waitFor();
 
 ```typescript
 await page.locator('div.modal footer button.primary').click();
+await page.locator('button:visible').click();
 await page.locator('//button[contains(@class,"save")]').click();
 ```
 
-**Why:** Role and name track user-visible behavior; CSS/XPath break when markup changes and hide accessibility gaps.
+**Why:** Role and name track user-visible behavior; `.visible()` filters without brittle CSS/XPath that breaks when markup changes.
 
 ## 2. Waiting
 
@@ -299,15 +301,23 @@ await expect(page).toHaveScreenshot('dashboard.png'); // clock/date shifts every
 
 ## 12. Anti-flake
 
-Rely on isolation, pinned locale/timezone (see config), and `page.clock` for time-sensitive UI; CI retries and trace-on-first-retry are safety nets—not substitutes for fixing root cause.
+Rely on isolation, pinned locale/timezone (see config), and `page.clock` for time-sensitive UI; in CI use `retryStrategy: 'isolated'` (1.62) so retries get a clean environment. Tests that touch one shared resource should use `test('…', { lock: '<resource>' }, …)` (1.63)—not a whole tag slice with `--workers=1`. Retries and trace-on-first-retry are safety nets, not substitutes for fixing root cause.
 
 ✅ **Good**
 
 ```typescript
+// playwright.config.ts
+retries: process.env.CI ? 2 : 0,
+retryStrategy: 'isolated',
+
 test('slot list respects today @e2e', async ({ page }) => {
   await page.clock.install({ time: new Date('2026-06-15T10:00:00-04:00') });
   await page.goto('/availability');
   await expect(page.getByRole('button', { name: 'Today, Jun 15' })).toBeVisible();
+});
+
+test('org banner @destructive', { lock: 'org-settings' }, async ({ page }) => {
+  /* only one test holds this lock at a time; other workers keep running */
 });
 ```
 
@@ -316,10 +326,10 @@ test('slot list respects today @e2e', async ({ page }) => {
 ```typescript
 // playwright.config.ts — “fixing” flake
 retries: 5,
-workers: 1, // globally, to paper over shared state
+workers: 1, // entire @destructive slice serial; prefer per-test lock when one resource conflicts
 ```
 
-**Why:** Retries and single-worker hide data races; controlled time and clean data remove the need.
+**Why:** Isolated retries and locks narrow contention; global `workers: 1` slows the whole suite while hiding shared-state bugs.
 
 ## Refusals (hard stops)
 
