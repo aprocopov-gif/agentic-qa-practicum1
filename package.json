@@ -1,0 +1,28 @@
+{
+  "name": "agentic-qa-practicum1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aprocopov-gif/agentic-qa-practicum1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aprocopov-gif/agentic-qa-practicum1/issues"
+  },
+  "homepage": "https://github.com/aprocopov-gif/agentic-qa-practicum1#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.6.0",
+    "dotenv": "^18.0.5"
+  }
+}
