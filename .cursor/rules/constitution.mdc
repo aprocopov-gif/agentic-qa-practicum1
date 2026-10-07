@@ -45,6 +45,8 @@ Non-negotiables for every task. Details and examples: `playwright-conventions.md
 
 **Agents** (`.cursor/agents/`): *(updated as each artifact is added)*
 
+**Rules** (`.cursor/rules/`): `atlassian-authoring.mdc` — `[Anna]` prefix on Confluence/Jira writes
+
 ## Agent governance
 
 Behavioral only, not hook-enforced. Applies to every non-trivial task (new spec, heal, refactor, config, multi-file edit). Trivial = a single-line fix with obvious intent.
