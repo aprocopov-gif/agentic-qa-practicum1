@@ -1,0 +1,28 @@
+---
+description: Prefix Confluence and Jira writes with [Anna] for attribution and version history.
+alwaysApply: true
+---
+
+# Atlassian authoring (Confluence & Jira)
+
+When creating or updating content via Atlassian MCP (Confluence pages, Jira issues, comments, transitions), **always prefix human-visible attribution text with `[Anna]`**.
+
+## Apply to
+
+| Action | Field / place | Example |
+|--------|----------------|---------|
+| Confluence page update | `versionMessage` | `[Anna] add confirmed routes from live exploration` |
+| Jira issue comment | comment body (first line or summary) | `[Anna] Verified on staging; still reproduces.` |
+| Jira issue create/edit | description lead-in when adding agent-authored summary | `[Anna] …` then details |
+| New Confluence page | optional first paragraph or version message | `[Anna] Initial draft from live exploration` |
+
+## Format
+
+- Use the literal prefix **`[Anna]`** (square brackets, capital A).
+- Follow with a space, then a short verb phrase in sentence case.
+- Do **not** use alternate forms (`Anna:`, `P7:`, bare name) for version messages or comments unless the user explicitly asks for a different format in that turn.
+
+## Scope
+
+- Required for **writes** (create/update/comment/transition with comment).
+- Not required for read-only lookups (`getJiraIssue`, `getConfluenceContent`, search).
