@@ -21,6 +21,7 @@ export class ProfilePage {
   readonly deleteAccountButton: Locator;
   readonly privacyLink: Locator;
   readonly termsLink: Locator;
+  readonly calendarSyncToast: Locator;
 
   constructor(private readonly page: Page) {
     this.header = new HeaderComponent(page);
@@ -47,6 +48,12 @@ export class ProfilePage {
     this.deleteAccountButton = page.getByRole('button', { name: 'Delete account…', exact: true });
     this.privacyLink = page.getByRole('link', { name: 'Privacy Policy', exact: true });
     this.termsLink = page.getByRole('link', { name: 'Terms of Service', exact: true });
+    this.calendarSyncToast = page.getByText('Calendar links ship with playdates 🗓️', { exact: true });
+  }
+
+  /** Opens Calendar Sync from profile settings. */
+  async openCalendarSync(): Promise<void> {
+    await this.calendarSyncButton.click();
   }
 
   /** Opens My Profile. */

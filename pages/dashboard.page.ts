@@ -22,6 +22,9 @@ export class DashboardPage {
   readonly seeAllFriendsLink: Locator;
   readonly enablePushRemindersButton: Locator;
   readonly installAppButton: Locator;
+  readonly upcomingPlaydatesWidgetTitle: Locator;
+  readonly upcomingPlaydatesWidget: Locator;
+  readonly upcomingPlaydatesEmptyCopy: Locator;
 
   constructor(private readonly page: Page) {
     this.header = new HeaderComponent(page);
@@ -39,6 +42,14 @@ export class DashboardPage {
     this.seeAllFriendsLink = page.getByRole('link', { name: 'See all →', exact: true });
     this.enablePushRemindersButton = page.getByRole('button', { name: 'Enable push reminders', exact: true });
     this.installAppButton = page.getByRole('button', { name: 'Install app', exact: true });
+    this.upcomingPlaydatesWidgetTitle = page.getByText('Upcoming Playdates', { exact: true });
+    this.upcomingPlaydatesWidget = page
+      .locator('div')
+      .filter({ has: this.upcomingPlaydatesWidgetTitle })
+      .first();
+    this.upcomingPlaydatesEmptyCopy = this.upcomingPlaydatesWidget.locator(
+      ':text-is("No playdates yet. Find a match and send the first request.")',
+    );
   }
 
   /** Opens the dashboard. */
@@ -46,9 +57,19 @@ export class DashboardPage {
     await this.page.goto(AppRoute.Dashboard);
   }
 
+  /** Opens Playdates from the Upcoming Playdates widget. */
+  async openAllPlaydates(): Promise<void> {
+    await this.viewAllPlaydatesLink.click();
+  }
+
   /** Opens the avatar picker for the child card that shows this label. */
   async openChangeAvatar(childLabel: string): Promise<void> {
     await this.childCard(childLabel).getByRole('button', { name: 'Change avatar', exact: true }).click();
+  }
+
+  /** Removes a child from the family list by first name. */
+  async removeChild(firstName: string): Promise<void> {
+    await this.childCard(firstName).getByRole('button', { name: 'remove', exact: true }).click();
   }
 
   /** Opens the circle invite panel. */
@@ -66,7 +87,10 @@ export class DashboardPage {
     await this.installAppButton.click();
   }
 
-  private childCard(childLabel: string): Locator {
-    return this.page.getByText(childLabel, { exact: true }).locator('..').locator('..');
+  private childCard(firstName: string): Locator {
+    return this.page
+      .locator('div')
+      .filter({ hasText: firstName })
+      .filter({ has: this.page.getByRole('button', { name: 'Change avatar', exact: true }) });
   }
 }

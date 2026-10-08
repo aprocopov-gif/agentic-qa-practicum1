@@ -21,6 +21,7 @@ export class HeaderComponent {
   readonly notificationsButton: Locator;
   readonly logOutButton: Locator;
   readonly status: Locator;
+  readonly noNewNotifications: Locator;
 
   constructor(page: Page) {
     this.navigation = page.getByRole('navigation');
@@ -43,6 +44,7 @@ export class HeaderComponent {
     this.notificationsButton = this.banner.getByRole('button', { name: 'Notifications', exact: true });
     this.logOutButton = this.banner.getByRole('button', { name: 'Log out', exact: true });
     this.status = page.getByRole('status');
+    this.noNewNotifications = page.getByText('No new notifications', { exact: true });
   }
 
   /** Opens Dashboard from the main navigation. */

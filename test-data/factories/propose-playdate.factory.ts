@@ -2,6 +2,23 @@ import { faker } from '@faker-js/faker';
 
 import { PlaydateCircleFamily, PlaydatePlaceOption } from '../playdates-propose.enums';
 
+/** Observed copy and slot labels from AQPBT-9 / Confluence live exploration. */
+export const playdatesProposeObserved = {
+  heading: 'Find a playdate',
+  intro:
+    'Pick a family, choose a matched slot or propose a manual time, then wait for the other parent to approve.',
+  proposePanelTitle: 'Propose',
+  sendRequest: 'Send request',
+  matchesBadge: '6 matches',
+  nguyensSlot: 'Sun, Oct 11 10:00am-1:00pm at The Gorfels',
+  petrovsSlot: 'Sat, Oct 10 2:00pm-5:00pm at The Petrovs',
+  childMia: 'Mia',
+  childMaria: 'Maria',
+  pendingEmptyCopy: 'No pending requests.',
+  upcomingEmptyCopy: 'No upcoming playdates yet.',
+  emptyCount: '0',
+} as const;
+
 /** How the proposer chooses date and time on `/playdates`. */
 export type PlaydateProposalMode = 'matched' | 'manual';
 
