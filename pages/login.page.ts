@@ -8,6 +8,7 @@ export class LoginPage {
   readonly logInButton: Locator;
   readonly signUpLink: Locator;
   readonly forgotPasswordLink: Locator;
+  readonly invalidCredentialsMessage: Locator;
 
   constructor(private readonly page: Page) {
     this.heading = page.getByRole('heading', { name: 'Welcome back', exact: true });
@@ -16,11 +17,18 @@ export class LoginPage {
     this.logInButton = page.getByRole('button', { name: 'Log in', exact: true });
     this.signUpLink = page.getByRole('link', { name: 'Sign up', exact: true });
     this.forgotPasswordLink = page.getByRole('link', { name: 'Forgot password?', exact: true });
+    this.invalidCredentialsMessage = page.getByText('Invalid email or password', { exact: true });
   }
 
   /** Opens the log-in page. */
   async goto(): Promise<void> {
     await this.page.goto(AppRoute.Login);
+  }
+
+  /** Opens the log-in page with a post-login return path (`next` query). */
+  async gotoWithReturnPath(returnPath: string): Promise<void> {
+    const next = encodeURIComponent(returnPath);
+    await this.page.goto(`${AppRoute.Login}?next=${next}`);
   }
 
   /** Fills the email field. */
@@ -36,6 +44,18 @@ export class LoginPage {
   /** Submits the log-in form. */
   async submit(): Promise<void> {
     await this.logInButton.click();
+  }
+
+  /** Fills credentials and submits the log-in form. */
+  async logIn(email: string, password: string): Promise<void> {
+    await this.fillEmail(email);
+    await this.fillPassword(password);
+    await this.submit();
+  }
+
+  /** Returns the Sign up link href (for next-query preservation checks). */
+  async signUpHref(): Promise<string | null> {
+    return this.signUpLink.getAttribute('href');
   }
 
   /** Opens the sign-up page. */
