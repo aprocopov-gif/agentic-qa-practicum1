@@ -51,6 +51,11 @@ export class DashboardPage {
     await this.childCard(childLabel).getByRole('button', { name: 'Change avatar', exact: true }).click();
   }
 
+  /** Removes a child from the family list by first name. */
+  async removeChild(firstName: string): Promise<void> {
+    await this.childCard(firstName).getByRole('button', { name: 'remove', exact: true }).click();
+  }
+
   /** Opens the circle invite panel. */
   async openCircleInvite(): Promise<void> {
     await this.inviteFamilyButton.click();
@@ -66,7 +71,10 @@ export class DashboardPage {
     await this.installAppButton.click();
   }
 
-  private childCard(childLabel: string): Locator {
-    return this.page.getByText(childLabel, { exact: true }).locator('..').locator('..');
+  private childCard(firstName: string): Locator {
+    return this.page
+      .locator('div')
+      .filter({ hasText: firstName })
+      .filter({ has: this.page.getByRole('button', { name: 'Change avatar', exact: true }) });
   }
 }
