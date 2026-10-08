@@ -1,6 +1,7 @@
 import type { Page, Route } from '@playwright/test';
 
 const AVAILABILITY_LIST_PATTERN = '**/api/v1/availability';
+const PLAYDATES_LIST_PATTERN = '**/api/v1/playdates';
 const ME_PATTERN = '**/api/v1/me';
 
 interface MePayload {
@@ -41,6 +42,30 @@ export async function mockAvailabilityListServerError(page: Page): Promise<void>
     }
 
     await fulfillJson(route, 500, { error: 'mock availability list failure' });
+  });
+}
+
+/** Forces GET /api/v1/playdates to return an empty list. */
+export async function mockPlaydatesListEmpty(page: Page): Promise<void> {
+  await page.route(PLAYDATES_LIST_PATTERN, async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+
+    await fulfillJson(route, 200, []);
+  });
+}
+
+/** Forces GET /api/v1/playdates to fail with a server error. */
+export async function mockPlaydatesListServerError(page: Page): Promise<void> {
+  await page.route(PLAYDATES_LIST_PATTERN, async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+
+    await fulfillJson(route, 500, { error: 'mock playdates list failure' });
   });
 }
 

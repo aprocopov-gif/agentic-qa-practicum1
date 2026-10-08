@@ -53,14 +53,39 @@ export class ProposePlaydateFormComponent {
     await this.optionalNote.fill(note);
   }
 
+  /** Family combobox option with this visible name. */
+  familyOption(name: string): Locator {
+    return this.family.getByRole('option', { name, exact: true });
+  }
+
+  /** Place combobox option with this visible name. */
+  placeOption(name: string): Locator {
+    return this.place.getByRole('option', { name, exact: true });
+  }
+
+  /** Child checkbox in the propose form. */
+  childCheckbox(name: string): Locator {
+    return this.root.getByRole('checkbox', { name, exact: true });
+  }
+
+  /** Matched-slot button whose accessible name is this label. */
+  matchedSlot(name: string): Locator {
+    return this.root.getByRole('button', { name, exact: true });
+  }
+
   /** Selects a child checkbox in the propose form. */
   async selectChild(name: string): Promise<void> {
-    await this.root.getByRole('checkbox', { name, exact: true }).check();
+    await this.childCheckbox(name).check();
+  }
+
+  /** Clears a child checkbox in the propose form. */
+  async unselectChild(name: string): Promise<void> {
+    await this.childCheckbox(name).uncheck();
   }
 
   /** Chooses a matched slot by its accessible name. */
   async selectMatchedSlot(name: string): Promise<void> {
-    await this.root.getByRole('button', { name, exact: true }).click();
+    await this.matchedSlot(name).click();
   }
 
   /** Submits the playdate request. */

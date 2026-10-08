@@ -22,6 +22,9 @@ export class DashboardPage {
   readonly seeAllFriendsLink: Locator;
   readonly enablePushRemindersButton: Locator;
   readonly installAppButton: Locator;
+  readonly upcomingPlaydatesWidgetTitle: Locator;
+  readonly upcomingPlaydatesWidget: Locator;
+  readonly upcomingPlaydatesEmptyCopy: Locator;
 
   constructor(private readonly page: Page) {
     this.header = new HeaderComponent(page);
@@ -39,11 +42,24 @@ export class DashboardPage {
     this.seeAllFriendsLink = page.getByRole('link', { name: 'See all →', exact: true });
     this.enablePushRemindersButton = page.getByRole('button', { name: 'Enable push reminders', exact: true });
     this.installAppButton = page.getByRole('button', { name: 'Install app', exact: true });
+    this.upcomingPlaydatesWidgetTitle = page.getByText('Upcoming Playdates', { exact: true });
+    this.upcomingPlaydatesWidget = page
+      .locator('div')
+      .filter({ has: this.upcomingPlaydatesWidgetTitle })
+      .first();
+    this.upcomingPlaydatesEmptyCopy = this.upcomingPlaydatesWidget.locator(
+      ':text-is("No playdates yet. Find a match and send the first request.")',
+    );
   }
 
   /** Opens the dashboard. */
   async goto(): Promise<void> {
     await this.page.goto(AppRoute.Dashboard);
+  }
+
+  /** Opens Playdates from the Upcoming Playdates widget. */
+  async openAllPlaydates(): Promise<void> {
+    await this.viewAllPlaydatesLink.click();
   }
 
   /** Opens the avatar picker for the child card that shows this label. */

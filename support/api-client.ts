@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { type APIRequestContext, request } from '@playwright/test';
+import { type APIRequestContext, type APIResponse, request } from '@playwright/test';
 
 import { AUTH_FILE, ALT_AUTH_FILE } from './auth.constants';
 import type { RecordOwner, TrackedRecord, TrackedRecordType } from './record-tracker';
 
 const AVAILABILITY_EXCEPTIONS_PATH = '/api/v1/availability/exceptions';
 const CHILDREN_PATH = '/api/v1/children';
+const PLAYDATES_PATH = '/api/v1/playdates';
 
 export interface DeleteRecordResult {
   type: TrackedRecordType;
@@ -75,7 +76,7 @@ export async function disposeApiContexts(): Promise<void> {
   contextByOwner.clear();
 }
 
-async function readErrorMessage(response: Awaited<ReturnType<APIRequestContext['delete']>>): Promise<string> {
+async function readErrorMessage(response: APIResponse): Promise<string> {
   try {
     const text = await response.text();
     return text.trim() || response.statusText();
@@ -117,6 +118,21 @@ export async function deleteAvailabilityException(
   };
 }
 
+/** Cancels one playdate (discovery: POST /api/v1/playdates/{id}/cancel). */
+export async function cancelPlaydate(apiContext: APIRequestContext, id: string): Promise<DeleteRecordResult> {
+  const response = await apiContext.post(`${PLAYDATES_PATH}/${id}/cancel`);
+  const ok = response.ok();
+  const message = ok ? '' : await readErrorMessage(response);
+
+  return {
+    type: 'playdate',
+    id,
+    ok,
+    status: response.status(),
+    message,
+  };
+}
+
 /** Deletes a tracked record using the appropriate API for its type. */
 export async function deleteTrackedRecord(
   apiContext: APIRequestContext,
@@ -127,6 +143,9 @@ export async function deleteTrackedRecord(
   }
   if (record.type === 'child') {
     return deleteChild(apiContext, record.id);
+  }
+  if (record.type === 'playdate') {
+    return cancelPlaydate(apiContext, record.id);
   }
 
   const unknownType: never = record.type;

@@ -9,6 +9,7 @@ import {
 
 const CREATE_EXCEPTION_PATH = '/api/v1/availability/exceptions';
 const CREATE_CHILD_PATH = '/api/v1/children';
+const CREATE_PLAYDATE_PATH = '/api/v1/playdates';
 
 interface IdCreateResponse {
   id: string;
@@ -72,6 +73,16 @@ async function tryTrackCreateResponses(
     readBody,
   );
   await trackCreateIfMatched(responseUrl, method, status, owner, CREATE_CHILD_PATH, 201, 'child', readBody);
+  await trackCreateIfMatched(
+    responseUrl,
+    method,
+    status,
+    owner,
+    CREATE_PLAYDATE_PATH,
+    201,
+    'playdate',
+    readBody,
+  );
 }
 
 export const test = base.extend<CleanupFixtures>({
