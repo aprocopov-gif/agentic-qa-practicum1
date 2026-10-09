@@ -41,7 +41,7 @@ Non-negotiables for every task. Details and examples: `playwright-conventions.md
 
 ## Index
 
-**Skills** (`.cursor/skills/`): `playwright-cli` — browser automation with playwright-cli
+**Skills** (`.cursor/skills/`): `api-cleanup`, `ci-failure-triage`, `eval-report`, `explore-and-generate`, `exploratory-charter`, `jira-bug-reporter`, `jira-ticket-analyzer`, `playwright-cli`, `pom-conventions`, `self-heal`, `test-data-reset`
 
 **Agents** (`.cursor/agents/`): *(updated as each artifact is added)*
 
